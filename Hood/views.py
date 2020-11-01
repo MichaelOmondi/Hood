@@ -78,12 +78,57 @@ def upload_post(request):
         if form.is_valid():
             upload = form.save(commit=False)
             upload.profile = request.user
-            # print(f'post is {upload.post}')
             upload.save()
             return redirect('profile', username=request.user)
     else:
         form = PostForm()
     
     return render(request, 'profile/upload_post.html', {'form':form})
+
+# comment
+@login_required(login_url='/accounts/login')
+def edit_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            edit = form.save(commit=False)
+            edit.user = request.user
+            edit.save()
+            return redirect('profile.html')
+    else:
+        form = ProfileForm()
+
+    return render(request, 'profile/edit_profile.html', {'form':form})
+
+@login_required(login_url='/accounts/login')
+def single_post(request, post_id):
+    post = Post.get_post_id(post_id)
+    comments = Comments.get_comments_by_posts(post_id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            return redirect('single_post', post_id=post_id)
+    else:
+        form = CommentForm()
+        
+    return render(request, 'post.html', {'post':post, 'form':form, 'comments':comments})
+
+def search(request):
+    if 'search' in request.GET and request.GET['search']:
+        search_term = request.GET.get('search')
+        profiles = Profile.search_profile(search_term)
+        message = f'{search_term}'
+
+        return render(request, 'search.html',{'message':message, 'profiles':profiles})
+    else:
+        message = 'Enter term to search'
+        return render(request, 'search.html', {'message':message})
+
+    
 
 
