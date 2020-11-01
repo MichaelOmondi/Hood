@@ -46,6 +46,40 @@ class Comments(models.Model):
     def get_comments_by_posts(cls, id):
         comments = Comments.objects.filter(post__pk = id)
         return comments
+
+#post
+class Post(models.Model):
+    photo = ImageField(blank=True, manual_crop='800x800')
+    post_name = models.CharField(max_length = 50)
+    post_caption = HTMLField(blank=True)
+    post_date = models.DateTimeField(auto_now=True)
+    likes = models.BooleanField(default=False)
+    profile = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('-post_date',)
+
+    def save_post(self):
+        self.save()
+    
+    @classmethod
+    def update_caption(cls, update):
+        pass
+    
+    @classmethod
+    def get_post_id(cls, id):
+        post = Post.objects.get(pk=id)
+        return post
+    
+    @classmethod
+    def get_profile_posts(cls, profile):
+        posts = Post.objects.filter(profile__pk = profile)
+        return posts
+    
+    @classmethod
+    def get_all_posts(cls):
+        posts = Post.objects.all()
+        return posts        
         
 
 
