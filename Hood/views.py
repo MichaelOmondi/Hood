@@ -85,7 +85,7 @@ def upload_post(request):
     
     return render(request, 'profile/upload_post.html', {'form':form})
 
-# comment
+# search
 @login_required(login_url='/accounts/login')
 def edit_profile(request):
     if request.method == 'POST':
