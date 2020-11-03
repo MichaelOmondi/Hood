@@ -9,7 +9,7 @@ from pyuploadcare.dj.models import ImageField
 
 # Create your models here.
 # Profile
- class Profile(models.Model):
+class Profile(models.Model):
     prof_pic = ImageField(blank=True, manual_crop='800x800')
     bio = HTMLField()
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
@@ -36,7 +36,7 @@ from pyuploadcare.dj.models import ImageField
 class Comments(models.Model):
     comment = HTMLField()
     posted_on = models.DateTimeField(auto_now=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def save_comment(self):
